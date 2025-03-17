@@ -1,35 +1,31 @@
-# Use uma imagem oficial do PHP com FPM
+# Use a imagem oficial do PHP com FPM
 FROM php:8.1-fpm
 
-# Instale as dependências do sistema
+# Atualize o repositório e instale as dependências necessárias
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
     libfreetype6-dev \
-    zip \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libonig-dev \
+    libzip-dev \
     unzip \
-    git \
-    curl
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
 
-# Instale extensões PHP necessárias
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
-
-# Configure o diretório de trabalho
+# Defina o diretório de trabalho
 WORKDIR /var/www
 
-# Copie os arquivos da aplicação para dentro do container
-COPY . /var/www
+# Copie os arquivos da aplicação para o diretório de trabalho
+COPY . .
 
 # Instale as dependências do Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Gere a chave da aplicação (se não existir)
-RUN php artisan key:generate --force
+# Gere a chave da aplicação
+RUN php artisan key:generate
 
-# Exponha a porta padrão do PHP-FPM
+# Exponha a porta 9000 e inicie o PHP-FPM
 EXPOSE 9000
-
-# Comando para iniciar o PHP-FPM
 CMD ["php-fpm"]
