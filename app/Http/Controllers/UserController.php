@@ -7,30 +7,25 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     public function index()
     {
-        // Recuperar os registros do banco dados
-        $users = User::orderByDesc('id')->get();
-
-        // Carregar a VIEW
-        return view('users.index', ['users' => $users]);
+        // Usuário autenticado, sem necessidade de carregar os contatos
+        return redirect()->route('contact.index');
     }
 
     public function show(User $user)
     {
-        return view('users.show', ['user' => $user]);
+        return view('contacts.show', ['user' => $user]);
     }
 
     public function create()
     {
-        // Carregar a VIEW
-        return view('users.create');
+        return view('contacts.create');
     }
 
     public function store(Request $request)
     {
-        // Validar o formulário
+        // Validação para criação do usuário
         $request->validate([
             'name' => 'required',
             'phone' => 'required',
@@ -39,7 +34,7 @@ class UserController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        // Cadastrar o usuário no BD
+        // Criação do usuário
         User::create([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -48,18 +43,18 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        // Redirecionar o usuário, enviar a mensagem de sucesso
-        return redirect()->route('user.index')->with('success', 'Usuário cadastrado com sucesso!');
+        // Redirecionamento para a página inicial de contatos
+        return redirect()->route('contacts.index')->with('success', 'Usuário cadastrado com sucesso!');
     }
 
     public function edit(User $user)
     {
-        return view('users.edit', ['user' => $user]);
+        return view('contacts.edit', ['user' => $user]);
     }
 
     public function update(Request $request, User $user)
     {
-        // Validar o formulário
+        // Validação para atualização de informações
         $request->validate([
             'name' => 'required',
             'phone' => 'nullable',
@@ -68,7 +63,7 @@ class UserController extends Controller
             'password' => 'nullable|min:6',
         ]);
 
-        // Editar as informações do registro no banco de dados
+        // Atualizar o usuário no banco de dados
         $user->update([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -77,16 +72,16 @@ class UserController extends Controller
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
-        // Redirecionar o usuário, enviar a mensagem de sucesso
-        return redirect()->route('user.show', ['user' => $user->id])->with('success', 'Usuário editado com sucesso!');
+        // Redirecionamento para a página de exibição do usuário
+        return redirect()->route('contact.show', ['user' => $user->id])->with('success', 'Usuário editado com sucesso!');
     }
 
     public function destroy(User $user)
     {
-        // Apagar o registro no BD
+        // Excluir o usuário
         $user->delete();
 
-        // Redirecionar o usuário, enviar a mensagem de sucesso
-        return redirect()->route('user.index')->with('success', 'Usuário apagado com sucesso!');
+        // Redirecionar para a página de contatos
+        return redirect()->route('contacts.index')->with('success', 'Usuário apagado com sucesso!');
     }
 }

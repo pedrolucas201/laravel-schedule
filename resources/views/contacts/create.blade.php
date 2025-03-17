@@ -1,16 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
-
     <div class="card mt-4 mb-4 border-light shadow">
 
         <div class="card-header hstack gap-2">
-            <span>Editar Usuário</span>
+            <span>Cadastrar Contato</span>
 
             <span class="ms-auto d-sm-flex flex-row">
 
-                <a href="{{ route('user.index') }}" class="btn btn-info btn-sm me-1">Listar</a>
-                <a href="{{ route('user.show', ['user' => $user->id]) }}" class="btn btn-primary btn-sm me-1">Visualizar</a>
+                <a href="{{ route('contact.index') }}" class="btn btn-info btn-sm me-1">Listar</a>
+
             </span>
         </div>
 
@@ -18,42 +17,36 @@
 
             <x-alert />
 
-            <form action="{{ route('user-update', ['user' => $user->id]) }}" method="POST" class="row g-3">
+            <form action="{{ route('contact.store') }}" method="POST" class="row g-3">
                 @csrf
-                @method('PUT')
+                @method('POST')
 
                 <div class="col-md-12">
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" name="name" class="form-control" id="name" placeholder="Nome completo"
-                        value="{{ old('name', $user->name) }}">
+                        value="{{ old('name') }}">
                 </div>
 
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Telefone</label>
                     <input type="text" name="phone" class="form-control" id="phone" placeholder="Telefone do usuário"
-                        value="{{ old('phone', $user->phone) }}">
+                        value="{{ old('phone') }}">
                 </div>
 
                 <div class="col-md-6">
                     <label for="email" class="form-label">E-mail</label>
                     <input type="email" name="email" class="form-control" id="email"
-                        placeholder="Melhor e-mail do usuário" value="{{ old('email', $user->email) }}">
+                        placeholder="Melhor e-mail do usuário" value="{{ old('email') }}">
                 </div>
 
                 <div class="col-md-12">
                     <label for="name" class="form-label">Observações</label>
                     <input type="text" name="observation" class="form-control" id="observation" placeholder="Observações"
-                        value="{{ old('observacoes', $user->observation) }}">
-                </div>
-
-                <div class="col-md-6">
-                    <label for="password" class="form-label">Senha</label>
-                    <input type="password" name="password" class="form-control" id="password"
-                        placeholder="Senha com no mínimo 6 caracteres" value="{{ old('password') }}">
+                        value="{{ old('observation') }}">
                 </div>
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-warning btn-sm">Salvar</button>
+                    <button type="submit" class="btn btn-success btn-sm">Cadastrar</button>
                 </div>
 
             </form>

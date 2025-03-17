@@ -10,6 +10,11 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function showLoginForm()
+    {
+        return view('auth.login'); // Retorna a view do formulário de login
+    }
+    
     public function login(Request $request)
     {
         // Validação das credenciais
@@ -33,15 +38,17 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirecionar para a página principal (exemplo: dashboard)
-        return redirect()->route('user.index')->with('success', 'Login realizado com sucesso!');
+        return redirect()->route('contact.index')->with('success', 'Login realizado com sucesso!');
     }    
     
-
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Token Revogado'], 200);
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('message', 'Você foi desconectado com sucesso!');
     }
+        
 
     public function register(Request $request)
     {
@@ -69,7 +76,7 @@ class AuthController extends Controller
         ]);
         
         // Criação do token de acesso para o usuário
-        $user->tokens()->create();
+        $token = $user->createToken('Cadastro de usuário')->plainTextToken;
         
         // Redirecionar para a página de login com uma mensagem de sucesso
         return redirect()->route('login')->with('success', 'Cadastro realizado com sucesso!');
@@ -79,11 +86,7 @@ class AuthController extends Controller
     {
         return view('auth.register'); // Retorna a view do formulário de registro
     }
-
-    public function showLoginForm()
-    {
-        return view('auth.login'); // Retorna a view do formulário de login
-    }
+    
 
 }
 

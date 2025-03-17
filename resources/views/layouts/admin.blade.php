@@ -23,16 +23,25 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="{{ route('user.index') }}" class="nav-link px-2 text-white">Home</a></li>
-                    <li><a href="{{ route('user.index') }}" class="nav-link px-2 text-white">Usuários</a></li>
+                    <li><a href="{{ route('contact.index') }}" class="nav-link px-2 text-white">Home</a></li>
+                    <!-- <li><a href="{{ route('contact.index') }}" class="nav-link px-2 text-white">Usuários</a></li> -->
                 </ul>
 
                 <div class="text-end">
-                    <a href="{{ route('register') }}">
-                        <button type="button" class="btn btn-outline-light me-2">
-                            Registrar
-                        </button>
-                    </a>
+                    @if(Auth::check()) <!-- Verifica se o usuário está autenticado -->
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                            <button type="submit" class="btn btn-outline-light me-2">
+                                Sair
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('register') }}">
+                            <button type="button" class="btn btn-outline-light me-2">
+                                Registrar
+                            </button>
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
