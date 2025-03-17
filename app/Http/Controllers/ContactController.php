@@ -61,7 +61,7 @@ class ContactController extends Controller
             'user_id' => Auth::id(), // Relaciona o contato ao usuário autenticado
         ]);
 
-        return redirect()->route('contacts.index')->with('success', 'Contato criado com sucesso!');
+        return redirect()->route('contact.index')->with('success', 'Contato criado com sucesso!');
     }
 
     // Mostrar o formulário de edição

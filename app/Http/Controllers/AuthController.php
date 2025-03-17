@@ -43,11 +43,22 @@ class AuthController extends Controller
     
     public function logout(Request $request)
     {
-        auth()->logout();
+        // Se estiver usando tokens (Laravel Sanctum ou Passport)
+        if ($request->user()) {
+            $request->user()->tokens()->delete(); // Remove todos os tokens do usuário
+        }
+    
+        // Faz logout do usuário autenticado (para sessões normais)
+        Auth::logout();
+    
+        // Invalida a sessão e gera um novo token CSRF
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+    
+        // Redireciona para a tela de login com uma mensagem
         return redirect()->route('login')->with('message', 'Você foi desconectado com sucesso!');
     }
+    
         
 
     public function register(Request $request)

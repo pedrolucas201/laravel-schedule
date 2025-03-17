@@ -41,6 +41,11 @@
                                 Registrar
                             </button>
                         </a>
+                        <a href="{{ route('login') }}">
+                            <button type="button" class="btn btn-outline-light me-2">
+                                Login
+                            </button>
+                        </a>
                     @endif
                 </div>
             </div>

@@ -22,9 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/contacts/show/{contact}', [ContactController::class, 'show'])->name('contact.show');
     Route::delete('/contacts/destroy/{contact}', [ContactController::class, 'destroy'])->name('contact.destroy');
     Route::get('/contacts/export', [ContactController::class, 'export'])->name('contact.export'); // Exportar para CSV
-    Route::post('/logout', function () {
-        Auth::logout();
-        return redirect()->route('logout');  // Redireciona para a página de logout
-    })->name('contacts.logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
 
